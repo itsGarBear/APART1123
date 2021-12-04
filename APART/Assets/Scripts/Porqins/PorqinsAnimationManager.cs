@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PorqinsAnimationManager : MonoBehaviour
 {
-    private Animator animator;
+    public Animator animator;
 
     public CameraShake cameraShake;
 
@@ -37,14 +37,9 @@ public class PorqinsAnimationManager : MonoBehaviour
         
     }
 
-    public void AnimationComplete(string attackName)
+    public void AnimationComplete()
     {
         animator.SetTrigger("AnimationComplete");
-        DoAttack(attackName);
-    }
-
-    public void DoAttack(string attackName)
-    {
-        GetComponentInParent<PorqinsManager>().Invoke(attackName, 0.1f);
+        PorqinsBossFight.instance.PhaseAttacks();
     }
 }

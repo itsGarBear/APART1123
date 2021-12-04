@@ -16,9 +16,6 @@ public class PorqinsManager : MonoBehaviour
     //Damage Flash
     [Header("Components")]
     private bool flashingDMG;
-    private MeshRenderer[] meshRenderers;
-    //Damage Canvas
-    public List<Transform> damageCanvasTransforms;
 
     public static PorqinsManager instance;
 
@@ -26,24 +23,11 @@ public class PorqinsManager : MonoBehaviour
     {
         instance = this;
         porqinsAnimation = GetComponentInChildren<PorqinsAnimationManager>();
-        meshRenderers = GetComponentsInChildren<MeshRenderer>();
     }
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.T))
-        {
-            porqinsAnimation.SpikeLaunch();
-        }
-        if(Input.GetKeyDown(KeyCode.V))
-        {
-            porqinsAnimation.GroundPound();
-        }
-
-        if(Input.GetKeyDown(KeyCode.R))
-        {
-            LaunchSpikes();
-        }
+        
     }
 
     public void DamageFlash(MeshRenderer[] meshRenderers)
@@ -75,20 +59,4 @@ public class PorqinsManager : MonoBehaviour
         }
     }
     
-
-    //called as Animation Event
-    public void LaunchSpikes()
-    {
-        foreach (Transform t in spikeLaunchers)
-        {
-            GameObject go = Instantiate(spike, t.position, Quaternion.identity);
-            go.GetComponent<Rigidbody>().AddForce(t.transform.up * fireForce, ForceMode.Impulse);
-        }
-    }
-
-    //called as Animation Event
-    public void GroundPound()
-    {
-        ShockwaveSpawner.instance.SpawnShockWave();
-    }
 }

@@ -13,6 +13,9 @@ public class SegmentedHealthBar : MonoBehaviour
     private int segmentAmount;
     private int segmentNdx = 0;
     private int currHealthSum = 0;
+    public bool isInvulnerable = false;
+
+    Color inVulnColor = new Color(255, 195, 0);
 
     private void Awake()
     {
@@ -30,26 +33,62 @@ public class SegmentedHealthBar : MonoBehaviour
     }
     public void UpdateHealthBar(int damage)
     {
-        if(damage > sliders[segmentNdx].value)
+        if(!isInvulnerable)
         {
-            sliders[segmentNdx].value = 0;
-            segmentNdx++;
-        }
-        else
-        {
-            sliders[segmentNdx].value -= damage;
-            if (sliders[segmentNdx].value == 0)
+            if (damage > sliders[segmentNdx].value)
             {
+                sliders[segmentNdx].value = 0;
                 segmentNdx++;
+                if (LayerMask.LayerToName(transform.root.gameObject.layer) == "Boss")
+                {
+                    StartCoroutine(GoInvulnerable());
+                }
             }
+            else
+            {
+                sliders[segmentNdx].value -= damage;
+                if (sliders[segmentNdx].value == 0)
+                {
+                    segmentNdx++;
+                    if (LayerMask.LayerToName(transform.root.gameObject.layer) == "Boss")
+                    {
+                        StartCoroutine(GoInvulnerable());
+                    }
+                }
+            }
+
+            foreach (Slider s in sliders)
+            {
+                currHealthSum += (int)s.value;
+            }
+
+            damageText.text = currHealthSum.ToString();
+            currHealthSum = 0;
         }
         
-        foreach(Slider s in sliders)
+    }
+
+    IEnumerator GoInvulnerable()
+    {
+        isInvulnerable = true;
+        
+        foreach (Slider s in sliders)
         {
-            currHealthSum += (int)s.value;
+            s.gameObject.transform.Find("Fill Area").Find("Fill").GetComponent<Image>().color = inVulnColor;
+            damageText.color = inVulnColor;
         }
 
-        damageText.text = currHealthSum.ToString();
-        currHealthSum = 0;
+        PorqinsBossFight.instance.StartPhase();
+
+        yield return new WaitForSeconds(8f);
+
+        foreach (Slider s in sliders)
+        {
+            s.gameObject.transform.Find("Fill Area").Find("Fill").GetComponent<Image>().color = Color.red;
+            damageText.color = Color.red;
+        }
+        
+        isInvulnerable = false;
+
     }
 }
