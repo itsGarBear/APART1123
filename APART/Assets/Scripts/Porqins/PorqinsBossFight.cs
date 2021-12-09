@@ -82,7 +82,7 @@ public class PorqinsBossFight : MonoBehaviour
         {
             Transform t = PorqinsManager.instance.spikeLaunchers[i];
             GameObject go = Instantiate(PorqinsManager.instance.spike, t.position, Quaternion.identity);
-            go.GetComponent<Rigidbody>().AddForce(t.transform.up * PorqinsManager.instance.fireForce, ForceMode.Impulse);
+            go.GetComponent<Rigidbody2D>().AddForce(t.transform.up * PorqinsManager.instance.fireForce, ForceMode2D.Impulse);
         }
     }
 

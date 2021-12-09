@@ -8,7 +8,7 @@ public class RotateWeapon : MonoBehaviour
     private void Update()
     {
         var dir = Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position);
-        var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg + 90f;
         transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
         //if(onRightSide && (transform.rotation.eulerAngles.z > 90 && transform.rotation.eulerAngles.z < 270))

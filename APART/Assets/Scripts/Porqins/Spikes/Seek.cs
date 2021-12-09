@@ -2,45 +2,51 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Seek : MonoBehaviour
+public class Seek : SteeringBehavior
 {
-    private Transform target;
+    public Kinematic character;
+    public GameObject target;
 
-    public float maxSpeed = 5f;
+    float maxAcceleration = 100f;
 
-    private void Start()
+    public bool flee = false;
+
+    public float closeEnoughRange;
+
+    protected virtual Vector3 getTargetPosition()
     {
-        target = GameObject.FindGameObjectWithTag("Player").transform;
+        Vector3 closeEnough = new Vector3(target.transform.position.x + Random.Range(-closeEnoughRange, closeEnoughRange),
+            target.transform.position.y + Random.Range(-closeEnoughRange, closeEnoughRange),
+            target.transform.position.z + Random.Range(-closeEnoughRange, closeEnoughRange));
+        return target.transform.position + closeEnough;
     }
 
-    void Update()
+    public override SteeringOutput getSteering()
     {
-        KinematicSteeringOutput steeringOutput = GetSteeringOutput();
-        transform.position += steeringOutput.velocity * Time.deltaTime;
-    }
+        SteeringOutput result = new SteeringOutput();
+        Vector3 targetPosition = getTargetPosition();
+        if (targetPosition == Vector3.positiveInfinity)
+        {
+            return null;
+        }
 
-    public KinematicSteeringOutput GetSteeringOutput()
-    {
-        KinematicSteeringOutput result = new KinematicSteeringOutput();
-
-        result.velocity = target.position - this.transform.position;
-
-        result.velocity.Normalize();
-        result.velocity *= maxSpeed;
-
-        float orientationAngle = newOrientation(transform.eulerAngles.y, result.velocity);
-        this.transform.eulerAngles = new Vector3(0, orientationAngle * (180 / Mathf.PI), 0);
-
-        result.rotation = 0;
-        return result;
-    }
-
-    public float newOrientation(float currOrAngle, Vector3 vel)
-    {
-        if (vel.magnitude > 0)
-            return Mathf.Atan2(vel.x, vel.z);
+        // Get the direction to the target
+        if (flee)
+        {
+            //result.linear = character.transform.position - target.transform.position;
+            result.linear = character.transform.position - targetPosition;
+        }
         else
-            return currOrAngle;
+        {
+            //result.linear = target.transform.position - character.transform.position;
+            result.linear = targetPosition - character.transform.position;
+        }
 
+        // give full acceleration along this direction
+        result.linear.Normalize();
+        result.linear *= maxAcceleration;
+
+        result.angular = 0;
+        return result;
     }
 }

@@ -11,6 +11,9 @@ TagManager:
   - FrontLegs
   - BackLegs
   - SecurityCamera
+  - Ladder
+  - Stairs
+  - Vent
   layers:
   - Default
   - TransparentFX
