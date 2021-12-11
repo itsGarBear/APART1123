@@ -11,14 +11,9 @@ public class Seek : SteeringBehavior
 
     public bool flee = false;
 
-    public float closeEnoughRange;
-
     protected virtual Vector3 getTargetPosition()
     {
-        Vector3 closeEnough = new Vector3(target.transform.position.x + Random.Range(-closeEnoughRange, closeEnoughRange),
-            target.transform.position.y + Random.Range(-closeEnoughRange, closeEnoughRange),
-            target.transform.position.z + Random.Range(-closeEnoughRange, closeEnoughRange));
-        return target.transform.position + closeEnough;
+        return target.transform.position;
     }
 
     public override SteeringOutput getSteering()

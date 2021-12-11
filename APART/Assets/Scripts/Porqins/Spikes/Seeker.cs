@@ -10,8 +10,6 @@ public class Seeker : Kinematic
 
     public bool flee = false;
 
-    public float closeEnoughRange;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -20,7 +18,6 @@ public class Seeker : Kinematic
         myMoveType = new Seek();
         myMoveType.character = this;
         myMoveType.target = myTarget;
-        myMoveType.closeEnoughRange = closeEnoughRange;
         myMoveType.flee = flee;
 
         mySeekRotateType = new LookWhereGoing();

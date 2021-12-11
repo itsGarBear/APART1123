@@ -16,9 +16,13 @@ public class DetectPlayerInLight : MonoBehaviour
         {
             if (collision.gameObject.CompareTag("Player"))
             {
-                GetComponent<SpriteRenderer>().material = canSeePlayerColor;
-                player = collision.gameObject.transform.root.GetComponent<PlayerController>();
-                transform.root.GetComponent<SecurityCamera>().FoundPlayer(player);
+                if (!PlayerController.myPlayer.isCara)
+                {
+                    GetComponent<SpriteRenderer>().material = canSeePlayerColor;
+                    player = collision.gameObject.transform.root.GetComponent<PlayerController>();
+                    transform.root.GetComponent<SecurityCamera>().FoundPlayer(player);
+                }
+                
             }
         }
         
@@ -31,10 +35,13 @@ public class DetectPlayerInLight : MonoBehaviour
         {
             if (collision.gameObject.CompareTag("Player"))
             {
-                GetComponent<SpriteRenderer>().material = cannotSeePlayerColor;
-
-                player = collision.gameObject.transform.root.GetComponent<PlayerController>();
-                transform.root.GetComponent<SecurityCamera>().LostPlayer(player);
+                if (!PlayerController.myPlayer.isCara)
+                {
+                    GetComponent<SpriteRenderer>().material = cannotSeePlayerColor;
+                    player = collision.gameObject.transform.root.GetComponent<PlayerController>();
+                    transform.root.GetComponent<SecurityCamera>().LostPlayer(player);
+                }
+                
             }
         }
         
@@ -46,7 +53,11 @@ public class DetectPlayerInLight : MonoBehaviour
         {
             if(collision.gameObject.CompareTag("Player"))
             {
-                transform.root.GetComponent<SecurityCamera>().SpawnGuard();
+                if (!PlayerController.myPlayer.isCara)
+                {
+                    transform.root.GetComponent<SecurityCamera>().SpawnGuard();
+                }
+                    
             }
         }
     }

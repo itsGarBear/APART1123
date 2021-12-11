@@ -17,65 +17,71 @@ public class Bullet : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        print(collision.gameObject.name);
         Destroy(gameObject);
-        if (LayerMask.LayerToName(collision.gameObject.layer) == "Boss")
+        if (!PlayerController.myPlayer.isCara)
         {
-            segmentedHealthBar = collision.gameObject.transform.root.GetComponentInChildren<SegmentedHealthBar>();
-
-            if (collision.gameObject.CompareTag("Head"))
+            if (LayerMask.LayerToName(collision.gameObject.layer) == "Boss")
             {
-                if (segmentedHealthBar.isInvulnerable)
-                    DamageCanvasSpawner.instance.SpawnDamageText(bossHeadShotDamage, collision.contacts[0].point, true);
-                else
-                    DamageCanvasSpawner.instance.SpawnDamageText(bossHeadShotDamage, collision.contacts[0].point, false);
+                segmentedHealthBar = collision.gameObject.transform.root.GetComponentInChildren<SegmentedHealthBar>();
 
-                //PorqinsManager.instance.DamageFlash(new MeshRenderer[] { collision.gameObject.GetComponent<MeshRenderer>() });
-                segmentedHealthBar.UpdateHealthBar(bossHeadShotDamage);
+                if (collision.gameObject.CompareTag("Head"))
+                {
+                    if (segmentedHealthBar.isInvulnerable)
+                        DamageCanvasSpawner.instance.SpawnDamageText(bossHeadShotDamage, collision.contacts[0].point, true);
+                    else
+                        DamageCanvasSpawner.instance.SpawnDamageText(bossHeadShotDamage, collision.contacts[0].point, false);
 
-            }
-            else if (collision.gameObject.CompareTag("Body"))
-            {
-                if (segmentedHealthBar.isInvulnerable)
-                    DamageCanvasSpawner.instance.SpawnDamageText(bossBodyShotDamage, collision.contacts[0].point, true);
-                else
-                    DamageCanvasSpawner.instance.SpawnDamageText(bossBodyShotDamage, collision.contacts[0].point, false);
+                    //PorqinsManager.instance.DamageFlash(new MeshRenderer[] { collision.gameObject.GetComponent<MeshRenderer>() });
+                    segmentedHealthBar.UpdateHealthBar(bossHeadShotDamage);
 
-                //PorqinsManager.instance.DamageFlash(new MeshRenderer[] { collision.gameObject.GetComponent<MeshRenderer>() });
-                segmentedHealthBar.UpdateHealthBar(bossBodyShotDamage);
+                }
+                else if (collision.gameObject.CompareTag("Body"))
+                {
+                    if (segmentedHealthBar.isInvulnerable)
+                        DamageCanvasSpawner.instance.SpawnDamageText(bossBodyShotDamage, collision.contacts[0].point, true);
+                    else
+                        DamageCanvasSpawner.instance.SpawnDamageText(bossBodyShotDamage, collision.contacts[0].point, false);
 
-            }
-            else if (collision.gameObject.CompareTag("FrontLegs"))
-            {
-                if (segmentedHealthBar.isInvulnerable)
-                    DamageCanvasSpawner.instance.SpawnDamageText(bossLegShotDamage, collision.contacts[0].point, true);
-                else
-                    DamageCanvasSpawner.instance.SpawnDamageText(bossLegShotDamage, collision.contacts[0].point, false);
+                    //PorqinsManager.instance.DamageFlash(new MeshRenderer[] { collision.gameObject.GetComponent<MeshRenderer>() });
+                    segmentedHealthBar.UpdateHealthBar(bossBodyShotDamage);
 
-                //MeshRenderer[] legColliders = collision.transform.parent.GetComponentsInChildren<MeshRenderer>();
-                //PorqinsManager.instance.DamageFlash(legColliders);
-                segmentedHealthBar.UpdateHealthBar(bossLegShotDamage);
+                }
+                else if (collision.gameObject.CompareTag("FrontLegs"))
+                {
+                    if (segmentedHealthBar.isInvulnerable)
+                        DamageCanvasSpawner.instance.SpawnDamageText(bossLegShotDamage, collision.contacts[0].point, true);
+                    else
+                        DamageCanvasSpawner.instance.SpawnDamageText(bossLegShotDamage, collision.contacts[0].point, false);
 
-            }
-            else if (collision.gameObject.CompareTag("BackLegs"))
-            {
-                if (segmentedHealthBar.isInvulnerable)
-                    DamageCanvasSpawner.instance.SpawnDamageText(bossLegShotDamage, collision.contacts[0].point, true);
-                else
-                    DamageCanvasSpawner.instance.SpawnDamageText(bossLegShotDamage, collision.contacts[0].point, false);
+                    //MeshRenderer[] legColliders = collision.transform.parent.GetComponentsInChildren<MeshRenderer>();
+                    //PorqinsManager.instance.DamageFlash(legColliders);
+                    segmentedHealthBar.UpdateHealthBar(bossLegShotDamage);
 
-                //MeshRenderer[] legColliders = collision.transform.parent.GetComponentsInChildren<MeshRenderer>();
-                //PorqinsManager.instance.DamageFlash(legColliders);
-                segmentedHealthBar.UpdateHealthBar(bossLegShotDamage);
+                }
+                else if (collision.gameObject.CompareTag("BackLegs"))
+                {
+                    if (segmentedHealthBar.isInvulnerable)
+                        DamageCanvasSpawner.instance.SpawnDamageText(bossLegShotDamage, collision.contacts[0].point, true);
+                    else
+                        DamageCanvasSpawner.instance.SpawnDamageText(bossLegShotDamage, collision.contacts[0].point, false);
 
+                    //MeshRenderer[] legColliders = collision.transform.parent.GetComponentsInChildren<MeshRenderer>();
+                    //PorqinsManager.instance.DamageFlash(legColliders);
+                    segmentedHealthBar.UpdateHealthBar(bossLegShotDamage);
+
+                }
             }
         }
 
-        else if (collision.gameObject.CompareTag("SecurityCamera"))
+        else if (PlayerController.myPlayer.isCara)
         {
-            print("camera disabled");
-            collision.gameObject.transform.root.GetComponent<SecurityCamera>().isDisabled = true;
+            if(collision.gameObject.CompareTag("SecurityCamera"))
+            {
+                print("camera disabled");
+                collision.gameObject.transform.root.GetComponent<SecurityCamera>().isDisabled = true;
+            }
         }
+            
     }
 
 }

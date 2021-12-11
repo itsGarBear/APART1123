@@ -6,8 +6,30 @@ public class GuardSpawner : MonoBehaviour
 {
     public Guard guardPrefab;
 
+    public float delayBetweenSpawns;
+    public bool canSpawnAgain = true;
+    private float timer = 0f;
+
     public void SpawnGuard()
     {
-        Instantiate(guardPrefab, transform);
+        if(canSpawnAgain)
+        {
+            canSpawnAgain = false;
+            Instantiate(guardPrefab, transform);
+        }
+            
+    }
+
+    private void Update()
+    {
+        if(!canSpawnAgain)
+        {
+            timer += Time.deltaTime;
+            if(timer > delayBetweenSpawns)
+            {
+                canSpawnAgain = true;
+                timer = 0f;
+            }
+        }
     }
 }

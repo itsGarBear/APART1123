@@ -5,10 +5,39 @@ using UnityEngine;
 public class MovingTarget : MonoBehaviour
 {
     Transform player;
-    private Vector3 GetPlayersPos()
+    PlayerController pc;
+
+    public float boundsExtender;
+    public float timeBetweenMoves;
+
+    bool didMove = false;
+
+    private void Start()
     {
-        return player.position;
-        //area in circle with radius
+        transform.localPosition = Vector3.zero;
+        player = transform.root;
+        pc = player.GetComponent<PlayerController>();
+    }
+
+    private void Update()
+    {
+        if (!didMove)
+        {
+            StartCoroutine(MoveLocation());
+        }
+            
+    }
+    IEnumerator MoveLocation()
+    {
+        didMove = true;
+
+        Vector3 newPos = new Vector3(
+            Random.Range(pc.boxCollider.bounds.extents.x - (boundsExtender * 1.5f), pc.boxCollider.bounds.extents.x),
+            Random.Range(pc.boxCollider.bounds.min.y - boundsExtender, pc.boxCollider.bounds.max.y + boundsExtender), 0f);
+        transform.localPosition = newPos;
         
+        yield return new WaitForSeconds(timeBetweenMoves);
+
+        didMove = false;
     }
 }

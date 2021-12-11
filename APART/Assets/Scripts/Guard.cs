@@ -29,16 +29,12 @@ public class Guard : MonoBehaviour
             {
                 if(checkIfPlayerInAttackRadius())
                 {
-                    //anim attack
-                    print("attacking");
                     anim.SetBool("Attack", true);
                 }
                 else
                 {
+                    anim.SetBool("Attack", false);
                     transform.position += new Vector3(-moveSpeed * Time.deltaTime, 0f, 0f);
-                    //turn off attack anim
-                    //walk anim
-                    print("walking");
                     transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
                 }
             }
@@ -46,24 +42,19 @@ public class Guard : MonoBehaviour
             {
                 if (checkIfPlayerInAttackRadius())
                 {
-                    //anim attack
-                    print("attacking");
                     anim.SetBool("Attack", true);
                 }
                 else
                 {
+                    anim.SetBool("Attack", false);
                     transform.position += new Vector3(moveSpeed * Time.deltaTime, 0f, 0f);
-                    //turn off attack anim
-                    //walk anim
-                    print("walking");
                     transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y, transform.localScale.z);
                 }
             }
         }
         else
         {
-            //stop walk
-            print("stopping");
+            //stop moving
         }
     }
 
@@ -76,7 +67,9 @@ public class Guard : MonoBehaviour
     }
     private bool checkIfPlayerInFollowRadius()
     {
-        if (Mathf.Abs(player.position.x - transform.position.x) < followRadius)
+        if (!PlayerController.myPlayer.isCara)
+            return false;
+        else if (Mathf.Abs(player.position.x - transform.position.x) < followRadius)
             return true;
         else
             return false;

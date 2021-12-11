@@ -7,31 +7,25 @@ public class PlayerController : MonoBehaviour
 {
     //Move Tutorial: https://pavcreations.com/platformers-implementation-in-unity-from-scratch/3/#Player-controller-script
     //Ladder Tutorial: https://pavcreations.com/climbing-ladders-mechanic-in-unity-2d-platformer-games/ 
+
+    [Header("Player State")]
+    [HideInInspector] public static PlayerController myPlayer;
+    public bool isCara = false;
+
+    [Header("Movement")]
     public float maxMoveSpeed = 50f;
     public float moveSpeed;
     public float jumpForce = 5f;
+    public float climbSpeed = .2f;
 
-    //private Rigidbody2D rb;
-    //public LayerMask groundLayer;
-    [SerializeField] private Collider2D collider;
-
-    //delete me later
-    public Toggle creativeToggle;
-
-    [Header("Weapon")]
-    public GameObject bulletPrefab;
-    public Transform bulletSpawnPos;
-
-    //trying new movement 
-    private Rigidbody2D rb;
-    private CircleCollider2D circleCollider;
-    [SerializeField] private LayerMask groundLayer;
     private float xMove = 0f;
+    private float yMove = 0f;
     private float lastJumpY = 0f;
     private bool isFacingRight = false;
     private bool isJumping = false;
 
     //ladder
+    private Transform ladder;
     private bool jumpHeld = false;
     private bool crouchHeld = false;
     private bool isUnderPlatform = false;
@@ -39,15 +33,23 @@ public class PlayerController : MonoBehaviour
     private bool climbHeld = false;
     private bool hasStartedClimb = false;
 
-    private Transform ladder;
-    private float yMove = 0f;
-    public float climbSpeed = .2f;
-
     //stairs
     private Stairs stair;
     public bool isNearAStair = false;
 
+    [Header("Weapon")]
     public bool canShoot = true;
+    public GameObject bulletPrefab;
+    public Transform bulletSpawnPos;
+
+    [Header("Components")]
+    [SerializeField] private LayerMask groundLayer;
+    [HideInInspector] public BoxCollider2D boxCollider;
+    private Rigidbody2D rb;
+    private CircleCollider2D circleCollider;
+
+    //delete me later
+    public Toggle creativeToggle;
 
     public void toggleGravity()
     {
@@ -58,8 +60,10 @@ public class PlayerController : MonoBehaviour
     }
     private void Awake()
     {
+        myPlayer = this;
         rb = GetComponentInChildren<Rigidbody2D>();
         circleCollider = GetComponentInChildren<CircleCollider2D>();
+        boxCollider = GetComponentInChildren<BoxCollider2D>();
     }
     private void Start()
     {
@@ -242,13 +246,14 @@ public class PlayerController : MonoBehaviour
         dir.y = rb.velocity.y;
 
         rb.velocity = dir;
+
     }
 
     private void TryJump()
     {
         Debug.DrawRay(transform.position, Vector2.down, Color.green);
         //RaycastHit2D hit;
-        if (Physics2D.Raycast(transform.position, -Vector2.up, collider.bounds.extents.y + 0.1f, groundLayer.value))
+        if (Physics2D.Raycast(transform.position, -Vector2.up, boxCollider.bounds.extents.y + 0.1f, groundLayer.value))
         {
             
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
