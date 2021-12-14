@@ -78,6 +78,16 @@ public class PlayerController : MonoBehaviour
     public Sprite aBodySprite;
     public Sprite aArmSprite;
 
+    //Arm transform positions
+    public Transform armLeftSide;
+    public Transform armRightSide;
+    public GameObject arm;
+
+    //Flip character stuff
+    public Vector3 mouseInput;
+    public Animator anim;
+    public bool isFlipped = false;
+
 
     public void toggleGravity()
     {
@@ -134,7 +144,7 @@ public class PlayerController : MonoBehaviour
         if(climbHeld)
         {
             if (!hasStartedClimb) hasStartedClimb = true;
-        }            
+        }
 
         //Enter Stair
         //if (isNearAStair && Input.GetButtonDown("Climb"))
@@ -145,6 +155,27 @@ public class PlayerController : MonoBehaviour
         //    print(stair.name);
         //    isNearAStair = true;
         //}
+
+        Vector3 mousePos = Input.mousePosition;
+        mousePos.z = Camera.main.nearClipPlane;
+        mouseInput = Camera.main.ScreenToWorldPoint(mousePos);
+
+        if (mouseInput.x < transform.position.x)
+        {
+            isFlipped = true;
+            arm.transform.position = armRightSide.position;
+        }
+        else
+        {
+            isFlipped = false;
+            arm.transform.position = armLeftSide.position;
+        }
+
+        activeBodySprite.flipX = isFlipped;
+        activeArmSprite.flipX = isFlipped;
+
+        anim.SetFloat("xInput", mouseInput.x);
+        anim.SetFloat("zInput", mouseInput.z);
     }
 
     public void SwitchCharacterSprites()
