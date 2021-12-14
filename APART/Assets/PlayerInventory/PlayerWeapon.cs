@@ -107,12 +107,12 @@ public class PlayerWeapon : MonoBehaviour
 
     public void TryShoot()
     {
-        if (pistolCurrentAmmo <= 0 || Time.time - lastShootTime < pistolShootRate)
-        {
+        if ((playerInv.currentEquipped == 1 && !playerInv.selected) && pistolCurrentAmmo <= 0 || Time.time - lastShootTime < pistolShootRate)
+        { 
             return;
         }
         
-        if (tranqCurrentAmmo <= 0 || Time.time - lastShootTime < tranqShootRate)
+        if ((playerInv.currentEquipped == 2 && !playerInv.selected) && tranqCurrentAmmo <= 0 || Time.time - lastShootTime < tranqShootRate)
         {
             return;
         }

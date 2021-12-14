@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class TimeScaler : MonoBehaviour
@@ -24,7 +25,6 @@ public class TimeScaler : MonoBehaviour
             Destroy(gameObject);
         }
 
-        StopTime();
     }
     private void Update()
     {
@@ -40,6 +40,7 @@ public class TimeScaler : MonoBehaviour
         Time.timeScale = 0f;
         if (!didCardSequence)
         {
+            UnityEngine.SceneManagement.SceneManager.LoadScene("Game");
             lastWeekText.text = "Last week's break-in was a success. You found and angered Porqins. His rage wreaked havoc on the building.";
             currentObjText.text = "This time... you want to free him.";
         }

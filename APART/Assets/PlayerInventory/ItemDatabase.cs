@@ -34,7 +34,8 @@ public class ItemDatabase : MonoBehaviour
             new Item(1, "Pistol", "A standard sidearm given to security guards"),
             new Item(2, "Tranq", "A tranquilizer pistol"),
             new Item(3, "Wrench", "A monkey wrench"),
-            new Item(4, "Scalpel", "A scalpel")
+            new Item(4, "Scalpel", "A scalpel"),
+            new Item(5, "Umbrella", "An orange umbrella")
         };
         foreach (Item i in items)
         {

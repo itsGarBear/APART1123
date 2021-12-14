@@ -8,6 +8,17 @@ public class CameraShake : MonoBehaviour
     //EZ CAMERA SHAKER ASSET 
     //https://youtu.be/9A9yj8KnM8c?t=441
 
+    public bool canCameraShake = true;
+
+    public void ToggleCamShake()
+    {
+        canCameraShake = !canCameraShake;
+        if (canCameraShake)
+        {
+            Shake(0.5f, 1f);
+        }
+    }
+
     public IEnumerator Shake(float duration, float magnitude)
     {
         Vector3 ogPos = transform.localPosition;

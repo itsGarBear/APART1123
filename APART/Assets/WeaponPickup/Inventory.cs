@@ -82,7 +82,7 @@ public class Inventory : MonoBehaviour
             iI.sprite = Resources.Load<Sprite>("Items/EmptyHand");
         }
 
-        UpdatePlayerEquipped(4, 0);
+        UpdatePlayerEquipped(5, 0);
         UpdatePlayerEquipped(0, 1);
 
     }
