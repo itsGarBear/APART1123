@@ -10,6 +10,7 @@ public class Inventory : MonoBehaviour
     public List<Image> inventorySlots;
     public List<Image> inventoryItems;
     public List<Slider> reloadSliders;
+    public List<GameObject> itemPrefabs;
     public Image selectedSlot;
     public Image itemSlot1;
     public SpriteRenderer armImage;
@@ -24,6 +25,9 @@ public class Inventory : MonoBehaviour
     public int pistolAmmo;
     public int tranqAmmo;
 
+    private Player player;
+    private Transform dropTransform;
+
     private void Awake()
     {
         int i = 0;
@@ -32,6 +36,25 @@ public class Inventory : MonoBehaviour
             //Debug.Log(ItemDatabase.instance.GetItem(GetSlotItem(i)));
             i++;
         }
+
+        player = FindObjectOfType<Player>();
+    }
+
+    public void DropItem()
+    {
+        if (!selected)
+        {
+            return;
+        }
+        if (currentEquipped == 0)
+        {
+            return;
+        }
+
+        int iD = GetSlotItem(currentSlot);
+        Instantiate(itemPrefabs[iD-1], new Vector3(player.transform.localPosition.x + 2f, player.transform.localPosition.y + 1f, player.transform.localPosition.z), Quaternion.identity);
+        //inventoryItems[currentSlot].sprite = Resources.Load<Sprite>("Items/EmptyHand");
+        UpdatePlayerEquipped(0, currentSlot);
     }
 
     public void UpdatePlayerEquipped(int itemID, int slotNdx)
@@ -59,7 +82,7 @@ public class Inventory : MonoBehaviour
             iI.sprite = Resources.Load<Sprite>("Items/EmptyHand");
         }
 
-        UpdatePlayerEquipped(0, 0);
+        UpdatePlayerEquipped(4, 0);
         UpdatePlayerEquipped(0, 1);
 
     }

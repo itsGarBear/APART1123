@@ -6,10 +6,21 @@ public class DetectPlayerInLight : MonoBehaviour
 {
     public Material cannotSeePlayerColor;
     public Material canSeePlayerColor;
+    public Material disabledColor;
 
     public SecurityCamera myCamera;
 
     PlayerController player;
+
+    public void DisableLight()
+    {
+        GetComponent<SpriteRenderer>().material = disabledColor;
+    }
+    public void EnableLight()
+    {
+        GetComponent<SpriteRenderer>().material = cannotSeePlayerColor;
+    }
+
 
     //Can see player
     private void OnTriggerStay2D(Collider2D collision)

@@ -29,21 +29,26 @@ public class PorqinsBossFight : MonoBehaviour
         if (currPhase == 1)
         {
             QuillPhase(3);
+            porqinsAnimation.canRun = true;
         }
         else if (currPhase == 2)
         {
             QuillPhase(6);
+            porqinsAnimation.canRun = true;
         }
         else if (currPhase == 3)
         {
             ShockWavePhase();
+            porqinsAnimation.canRun = true;
         }
         else if (currPhase == 4)
         {
-            RollPhase();
+            QuillPhase(6);
+            porqinsAnimation.canRun = true;
         }
 
-        currPhase++;
+        if(currPhase != 4)
+            currPhase++;
     }
 
 
@@ -52,6 +57,7 @@ public class PorqinsBossFight : MonoBehaviour
     //Animations
     public void StartPhase()
     {
+        porqinsAnimation.canRun = false;
         if (currPhase == 1)
         {
             porqinsAnimation.SpikeLaunch();
@@ -66,9 +72,14 @@ public class PorqinsBossFight : MonoBehaviour
         }
         else if (currPhase == 4)
         {
-            //CHANGE ME
-            //porqinsAnimation.GroundPound();
+            porqinsAnimation.SpikeLaunch();
+            Invoke("ReShootSpikes", 2f);
         }
+    }
+
+    private void ReShootSpikes()
+    {
+        porqinsAnimation.SpikeLaunch();
     }
     private void SpikeBallArmor()
     {

@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class PorqinsManager : MonoBehaviour
 {
+    private Transform player;
+    public int moveSpeed;
+    public float followRadius;
+
     //Spikes
     [Header("Spikes")]
     public Transform[] spikeLaunchers;
@@ -19,18 +23,58 @@ public class PorqinsManager : MonoBehaviour
 
     public static PorqinsManager instance;
 
-    private void Awake()
+    public GameObject canvas;
+
+    Color lethalColor = Color.red;
+    Color nonLethalColor = new Color32(127, 88, 219, 255);
+    private void Start()
     {
         instance = this;
+        player = PlayerController.myPlayer.transform;
         porqinsAnimation = GetComponentInChildren<PorqinsAnimationManager>();
     }
-    // Update is called once per frame
+
     void Update()
     {
+        if(porqinsAnimation.canRun)
+        {
+            if (checkIfPlayerInFollowRadius())
+            {
+                porqinsAnimation.StartRunning();
+                if (player.position.x < transform.position.x)
+                {
+                    transform.position += new Vector3(-moveSpeed * Time.deltaTime, 0f, 0f);
+                    transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+                    canvas.transform.localScale = new Vector3(Mathf.Abs(canvas.transform.localScale.x), canvas.transform.localScale.y, canvas.transform.localScale.z);
+                }
+                else if (player.position.x > transform.position.x)
+                {
+                    transform.position += new Vector3(moveSpeed * Time.deltaTime, 0f, 0f);
+                    transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+                    canvas.transform.localScale = new Vector3(-Mathf.Abs(canvas.transform.localScale.x), canvas.transform.localScale.y, canvas.transform.localScale.z);
+                }
+            }
+            else
+            {
+                porqinsAnimation.StopRunning();
+            }
+        }
+        else
+        {
+            porqinsAnimation.StopRunning();
+        }
         
     }
 
-    public void DamageFlash(MeshRenderer[] meshRenderers)
+    private bool checkIfPlayerInFollowRadius()
+    {
+        if (Mathf.Abs(player.position.x - transform.position.x) < followRadius)
+            return true;
+        else
+            return false;
+    }
+
+    public void DamageFlash(SpriteRenderer[] spriteRenderers, bool isLethal)
     {
         if (flashingDMG)
             return;
@@ -42,17 +86,20 @@ public class PorqinsManager : MonoBehaviour
             flashingDMG = true;
 
             Color defaultColor = Color.white;
-            foreach (MeshRenderer mr in meshRenderers)
+            foreach (SpriteRenderer sr in spriteRenderers)
             {
-                defaultColor = mr.material.color;
-                mr.material.color = Color.red;
+                defaultColor = sr.material.color;
+                if(isLethal)
+                    sr.material.color = lethalColor;
+                else
+                    sr.material.color = nonLethalColor;
             }
             
             yield return new WaitForSeconds(0.1f);
 
-            foreach (MeshRenderer mr in meshRenderers)
+            foreach (SpriteRenderer sr in spriteRenderers)
             {
-                mr.material.color = defaultColor;
+                sr.material.color = defaultColor;
             }
 
             flashingDMG = false;

@@ -35,5 +35,9 @@ public class Player : MonoBehaviour
         {
             inv.UpdateSlotSelection(1);
         }
+        if(Input.GetKeyDown(KeyCode.Q))
+        {
+            inv.DropItem();
+        }
     }
 }

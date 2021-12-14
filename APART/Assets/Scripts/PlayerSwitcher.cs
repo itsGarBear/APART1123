@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class PlayerSwitcher : MonoBehaviour
 {
@@ -11,8 +13,12 @@ public class PlayerSwitcher : MonoBehaviour
     public Inventory inventory;
 
     public GameObject closedRodentCages;
+    public GameObject porqinsUseless;
+    public GameObject porqinsActual;
 
     public static PlayerSwitcher instance;
+
+    public TextMeshProUGUI cornerObjText;
     private void Start()
     {
         instance = this;
@@ -20,12 +26,14 @@ public class PlayerSwitcher : MonoBehaviour
     public void LeverPulled()
     {
         fadeToBlack.SetBool("FadeIn", true);
+        TimeScaler.instance.didCardSequence = true;
+        TimeScaler.instance.StopTime();
     }
     public void FinishedFade()
     {
         print("done");
         //RESET IT ALL
-        Time.timeScale = 0;
+        TimeScaler.instance.StopTime();
 
         PlayerController.myPlayer.isCara = false;
         PlayerController.myPlayer.transform.position = transform.root.position;
@@ -37,13 +45,16 @@ public class PlayerSwitcher : MonoBehaviour
         minimap.GetComponent<MiniMap>().ResetMiniMap();
         ventMap.GetComponent<VentCanvas>().ResetVentMaps();
 
-        closedRodentCages.SetActive(false);
+        cornerObjText.text = "<b>Objective:</b>\nFind Porqins and deal with him";
 
+        closedRodentCages.SetActive(false);
+        porqinsUseless.SetActive(false);
+        porqinsActual.SetActive(true);
         RodentSpawner.instance.SpawnAnimals();
 
         inventory.ResetInventory();
 
-        Time.timeScale = 1;
+        
 
     }
 
@@ -52,7 +63,9 @@ public class PlayerSwitcher : MonoBehaviour
         fadeToBlack.SetBool("FadeIn", false);
         fadeToBlack.SetBool("FadeOut", true);
 
-        
+
+        TimeScaler.instance.StartTime();
+
         //give all ammo
     }
 
@@ -70,10 +83,6 @@ public class PlayerSwitcher : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.L))
         {
             LeverPulled();
-        }
-        if(Input.GetKeyDown(KeyCode.P))
-        {
-            FadeToGame();
         }
     }
 }

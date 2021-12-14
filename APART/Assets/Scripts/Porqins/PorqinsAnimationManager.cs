@@ -11,6 +11,8 @@ public class PorqinsAnimationManager : MonoBehaviour
 
     public Toggle camShakeToggle;
 
+    public bool canRun = true;
+
     void Start()
     {
         animator = GetComponent<Animator>();
@@ -28,6 +30,14 @@ public class PorqinsAnimationManager : MonoBehaviour
         animator.SetTrigger("GroundPound");
     }
 
+    public void StartRunning()
+    {
+        animator.SetBool("Run", true);
+    }
+    public void StopRunning()
+    {
+        animator.SetBool("Run", false);
+    }
     public void CameraShake()
     {
         if(camShakeToggle.isOn)

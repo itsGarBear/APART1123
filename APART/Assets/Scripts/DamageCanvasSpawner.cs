@@ -10,21 +10,24 @@ public class DamageCanvasSpawner : MonoBehaviour
     public static DamageCanvasSpawner instance;
     public Camera cam;
 
-    Color inVulnColor = new Color(255, 195, 0);
+    Color inVulnColor = new Color32(255, 195, 0, 255);
+    Color lethalColor = Color.red;
+    Color nonLethalColor = new Color32(127, 88, 219, 255);
 
     private void Awake()
     {
         instance = this;
     }
 
-    public void SpawnDamageText(int damage, Vector3 pos, bool useGoldText)
+    public void SpawnDamageText(int damage, Vector3 pos, int textColor)
     {
         Vector3 screenPos = cam.WorldToScreenPoint(pos);
 
         TextMeshProUGUI damageText = Instantiate(damageTextPrefab, screenPos, Quaternion.identity, this.transform);
 
-        if (useGoldText) damageText.color = inVulnColor;
-        else damageText.color = Color.red; 
+        if (textColor == 0) damageText.color = inVulnColor;
+        else if (textColor == 1) damageText.color = lethalColor;
+        else if (textColor == 2) damageText.color = nonLethalColor; 
 
         damageText.text = damage.ToString();
         damageText.gameObject.GetComponent<Animator>().SetTrigger("Play");

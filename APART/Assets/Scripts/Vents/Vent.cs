@@ -36,7 +36,7 @@ public class Vent : MonoBehaviour
 
     private void OnMouseOver()
     {
-        if(Input.GetMouseButton(1) && isUnlocked)
+        if(Input.GetKeyDown(KeyCode.E) && isUnlocked)
         {
             ventCanvas.Enable();
         }

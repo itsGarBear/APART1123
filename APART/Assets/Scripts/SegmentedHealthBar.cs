@@ -15,7 +15,9 @@ public class SegmentedHealthBar : MonoBehaviour
     private int currHealthSum = 0;
     public bool isInvulnerable = false;
 
-    Color inVulnColor = new Color(255, 195, 0);
+    Color inVulnColor = new Color32(255, 195, 0, 255);
+    Color lethalColor = Color.red;
+    Color nonLethalColor = new Color32(127, 88, 219, 255);
 
     private void Awake()
     {
@@ -31,10 +33,27 @@ public class SegmentedHealthBar : MonoBehaviour
             s.value = segmentAmount;
         }
     }
-    public void UpdateHealthBar(int damage)
+    public void UpdateHealthBar(int damage, bool isLethal)
     {
         if(!isInvulnerable)
         {
+            if(isLethal)
+            {
+                foreach(Slider s in sliders)
+                {
+                    s.gameObject.transform.Find("Fill Area").Find("Fill").GetComponent<Image>().color = lethalColor;
+                    damageText.color = lethalColor;
+                }
+            }
+            else
+            {
+                foreach (Slider s in sliders)
+                {
+                    s.gameObject.transform.Find("Fill Area").Find("Fill").GetComponent<Image>().color = nonLethalColor;
+                    damageText.color = nonLethalColor;
+                }
+            }
+
             if (damage > sliders[segmentNdx].value)
             {
                 sliders[segmentNdx].value = 0;
@@ -85,7 +104,7 @@ public class SegmentedHealthBar : MonoBehaviour
         foreach (Slider s in sliders)
         {
             s.gameObject.transform.Find("Fill Area").Find("Fill").GetComponent<Image>().color = Color.red;
-            damageText.color = Color.red;
+            damageText.color = lethalColor;
         }
         
         isInvulnerable = false;

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SecurityCamera : MonoBehaviour
 {
+    public DetectPlayerInLight myLight;
     public float rotateSpeed = 60f;
     public float completeRotationArc = 90f;
     public float offsetAngle = 45f;
@@ -13,7 +14,7 @@ public class SecurityCamera : MonoBehaviour
     private float disabledTimer = 3f;
     private float disabledTimerCounter = 3f;
 
-    private float playerSpeedMovePenalty = 10f;
+    public float playerSpeedMovePenalty = 20f;
 
     private PlayerController player;
 
@@ -41,9 +42,11 @@ public class SecurityCamera : MonoBehaviour
         else
         {
             disabledTimerCounter -= Time.deltaTime;
-            if(disabledTimerCounter <= 0)
+            myLight.DisableLight();
+            if (disabledTimerCounter <= 0)
             {
                 disabledTimerCounter = disabledTimer;
+                myLight.EnableLight();
                 isDisabled = false;
             }
         }

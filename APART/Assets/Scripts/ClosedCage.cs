@@ -24,7 +24,6 @@ public class ClosedCage : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            print("freed");
             Destroy(gameObject);
             FreeRodent();
         }
