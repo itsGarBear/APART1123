@@ -61,6 +61,7 @@ public class HeartsHealthSystem : MonoBehaviour
         {
             Heart heart = heartList[i];
             int missingFragments = MAX_FRAGMENT_AMOUNT - heart.GetFragmentAmount();
+            
             if (healAmount > missingFragments)
             {
                 healAmount -= missingFragments;

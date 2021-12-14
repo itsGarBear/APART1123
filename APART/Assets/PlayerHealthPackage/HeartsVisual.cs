@@ -69,6 +69,8 @@ public class HeartsVisual : MonoBehaviour
     private void HeartsHealthSystem_onHealed(object sender, System.EventArgs e)
     {
         isHealing = true;
+
+        RefreshAllHearts();
     }
 
     private void HeartsHealthSystem_onDamaged(object sender, System.EventArgs e)

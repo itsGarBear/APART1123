@@ -5,7 +5,6 @@ using UnityEngine;
 public class Guard : MonoBehaviour
 {
     public int moveSpeed;
-    public int attackDmg;
     public int hp;
     public float attackRadius;
 
@@ -18,37 +17,38 @@ public class Guard : MonoBehaviour
 
     private void Start()
     {
-        player = GameObject.FindObjectOfType<PlayerController>().transform;
+        player = PlayerController.myPlayer.transform;
         anim = GetComponent<Animator>();
     }
     private void Update()
     {
-        if(checkIfPlayerInFollowRadius())
+        if (checkIfPlayerInFollowRadius())
         {
-            if(player.position.x < transform.position.x)
-            {
-                if(checkIfPlayerInAttackRadius())
-                {
-                    anim.SetBool("Attack", true);
-                }
-                else
-                {
-                    anim.SetBool("Attack", false);
-                    transform.position += new Vector3(-moveSpeed * Time.deltaTime, 0f, 0f);
-                    transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
-                }
-            }
-            else if(player.position.x > transform.position.x)
+            if (player.position.x < transform.position.x)
             {
                 if (checkIfPlayerInAttackRadius())
                 {
+                    transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
                     anim.SetBool("Attack", true);
                 }
                 else
                 {
-                    anim.SetBool("Attack", false);
+                    transform.position += new Vector3(-moveSpeed * Time.deltaTime, 0f, 0f);
+                    transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+                }
+            }
+            else if (player.position.x > transform.position.x)
+            {
+                if (checkIfPlayerInAttackRadius())
+                {
+                    transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+                    anim.SetBool("Attack", true);
+                }
+                else
+                {
                     transform.position += new Vector3(moveSpeed * Time.deltaTime, 0f, 0f);
-                    transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y, transform.localScale.z);
+                    transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+
                 }
             }
         }

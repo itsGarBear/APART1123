@@ -78,7 +78,7 @@ public class Bullet : MonoBehaviour
             if(collision.gameObject.CompareTag("SecurityCamera"))
             {
                 print("camera disabled");
-                collision.gameObject.transform.root.GetComponent<SecurityCamera>().isDisabled = true;
+                collision.gameObject.transform.parent.parent.GetComponent<SecurityCamera>().isDisabled = true;
             }
         }
             

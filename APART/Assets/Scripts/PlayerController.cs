@@ -8,6 +8,25 @@ public class PlayerController : MonoBehaviour
     //Move Tutorial: https://pavcreations.com/platformers-implementation-in-unity-from-scratch/3/#Player-controller-script
     //Ladder Tutorial: https://pavcreations.com/climbing-ladders-mechanic-in-unity-2d-platformer-games/ 
 
+
+
+
+
+
+
+    //SNAPPY JUMPS https://pavcreations.com/jumping-controls-in-2d-pixel-perfect-platformers/
+
+
+
+
+
+
+
+
+
+
+
+
     [Header("Player State")]
     [HideInInspector] public static PlayerController myPlayer;
     public bool isCara = false;
@@ -29,9 +48,9 @@ public class PlayerController : MonoBehaviour
     private bool jumpHeld = false;
     private bool crouchHeld = false;
     private bool isUnderPlatform = false;
-    private bool isCloseToLadder = false;
-    private bool climbHeld = false;
-    private bool hasStartedClimb = false;
+    public bool isCloseToLadder = false;
+    public bool climbHeld = false;
+    public bool hasStartedClimb = false;
 
     //stairs
     private Stairs stair;
@@ -39,17 +58,26 @@ public class PlayerController : MonoBehaviour
 
     [Header("Weapon")]
     public bool canShoot = true;
-    public GameObject bulletPrefab;
-    public Transform bulletSpawnPos;
 
     [Header("Components")]
     [SerializeField] private LayerMask groundLayer;
     [HideInInspector] public BoxCollider2D boxCollider;
     private Rigidbody2D rb;
-    private CircleCollider2D circleCollider;
+    public CircleCollider2D circleCollider;
+    public SpriteRenderer activeBodySprite;
+    public SpriteRenderer activeArmSprite;
 
     //delete me later
     public Toggle creativeToggle;
+
+    [Header("Cara Sprites")]
+    public Sprite cBodySprite;
+    public Sprite cArmSprite;
+
+    [Header("Alice Sprites")]
+    public Sprite aBodySprite;
+    public Sprite aArmSprite;
+
 
     public void toggleGravity()
     {
@@ -64,6 +92,8 @@ public class PlayerController : MonoBehaviour
         rb = GetComponentInChildren<Rigidbody2D>();
         circleCollider = GetComponentInChildren<CircleCollider2D>();
         boxCollider = GetComponentInChildren<BoxCollider2D>();
+        activeBodySprite.sprite = cBodySprite;
+        activeArmSprite.sprite = cArmSprite;
     }
     private void Start()
     {
@@ -104,26 +134,34 @@ public class PlayerController : MonoBehaviour
         if(climbHeld)
         {
             if (!hasStartedClimb) hasStartedClimb = true;
-        }
-
-        if (Input.GetMouseButtonDown(0))
-        {
-            if(canShoot)
-                TryShoot();
-        }
-            
+        }            
 
         //Enter Stair
-        if (isNearAStair && Input.GetButtonDown("Climb"))
-        {
-            transform.position = stair.EnterStair();
-            print(stair.name);
-            stair = stair.stairExitsAt;
-            print(stair.name);
-            isNearAStair = true;
-        }
+        //if (isNearAStair && Input.GetButtonDown("Climb"))
+        //{
+        //    transform.position = stair.EnterStair();
+        //    print(stair.name);
+        //    stair = stair.stairExitsAt;
+        //    print(stair.name);
+        //    isNearAStair = true;
+        //}
     }
 
+    public void SwitchCharacterSprites()
+    {
+        if(isCara)
+        {
+            print("i am cara");
+            activeBodySprite.sprite = cBodySprite;
+            activeArmSprite.sprite = cArmSprite;
+        }
+        else
+        {
+            print("i am alice");
+            activeBodySprite.sprite = aBodySprite;
+            activeArmSprite.sprite = aArmSprite;
+        }
+    }
     private void FixedUpdate()
     {
         if(!creativeToggle.isOn)
@@ -150,8 +188,17 @@ public class PlayerController : MonoBehaviour
             else if (hasStartedClimb && climbHeld)
             {
                 float height = GetComponent<SpriteRenderer>().size.y;
-                float topLadderY = Half(ladder.transform.GetChild(0).transform.localPosition.y + height);
-                float bottomLadderY = Half(ladder.transform.GetChild(1).transform.localPosition.y + height);
+                float topLadderY = 0f;
+                float bottomLadderY = 0f;
+                try
+                {
+                    topLadderY = Half(ladder.transform.GetChild(0).transform.position.y + height);
+                    bottomLadderY = Half(ladder.transform.GetChild(1).transform.position.y - height);
+                }
+                catch
+                {
+                    //print("i have crippling depression");
+                }
 
 
                 float transformY = Half(transform.position.y);
@@ -167,13 +214,24 @@ public class PlayerController : MonoBehaviour
                     if (!transform.position.x.Equals(ladder.transform.position.x))
                         transform.position = new Vector3(ladder.transform.position.x, transform.position.y, transform.position.z);
 
-                    Vector3 fowardDir = new Vector3(0f, transformVY, 0);
+                    Vector3 forwardDir = new Vector3(0f, transformVY, 0);
                     Vector3 newPos = Vector3.zero;
 
                     if (yMove > 0)
-                        newPos = transform.position + fowardDir * Time.deltaTime * climbSpeed;
+                    {
+                        if(forwardDir.y <= 0)
+                            newPos = transform.position - forwardDir * Time.deltaTime * climbSpeed;
+                        else
+                            newPos = transform.position + forwardDir * Time.deltaTime * climbSpeed;
+                    }
                     else if (yMove < 0)
-                        newPos = transform.position - fowardDir * Time.deltaTime * climbSpeed;
+                    {
+                        if (forwardDir.y <= 0)
+                            newPos = transform.position + forwardDir * Time.deltaTime * climbSpeed;
+                        else
+                            newPos = transform.position - forwardDir * Time.deltaTime * climbSpeed;
+                    }
+                        
                     if (newPos != Vector3.zero)
                         rb.MovePosition(newPos);
                 }
@@ -227,15 +285,6 @@ public class PlayerController : MonoBehaviour
         float y = Input.GetAxis("Vertical");
 
         rb.velocity = new Vector3(x,y,0f) * moveSpeed;
-    }
-    private void TryShoot()
-    {
-        Quaternion angle = bulletSpawnPos.transform.parent.transform.parent.rotation;
-        angle.eulerAngles = new Vector3(angle.eulerAngles.x, angle.eulerAngles.y, angle.eulerAngles.z + 180f);
-        GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPos.position, angle);
-        Bullet b = bullet.GetComponent<Bullet>();
-
-        b.rb.velocity = bulletSpawnPos.right * b.fireForce;
     }
 
     private void Move()
@@ -297,6 +346,4 @@ public class PlayerController : MonoBehaviour
             stair = null;
         }
     }
-
-    
 }

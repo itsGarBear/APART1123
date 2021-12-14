@@ -14,6 +14,9 @@ TagManager:
   - Ladder
   - Stairs
   - Vent
+  - Slot1
+  - Slot2
+  - RodentCage
   layers:
   - Default
   - TransparentFX

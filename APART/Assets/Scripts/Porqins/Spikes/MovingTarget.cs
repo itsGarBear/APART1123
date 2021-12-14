@@ -33,7 +33,7 @@ public class MovingTarget : MonoBehaviour
 
         Vector3 newPos = new Vector3(
             Random.Range(pc.boxCollider.bounds.extents.x - (boundsExtender * 1.5f), pc.boxCollider.bounds.extents.x),
-            Random.Range(pc.boxCollider.bounds.min.y - boundsExtender, pc.boxCollider.bounds.max.y + boundsExtender), 0f);
+            Random.Range(pc.boxCollider.bounds.extents.y - (boundsExtender * 1.5f), pc.boxCollider.bounds.extents.y + (boundsExtender * 1.5f)), 0f);
         transform.localPosition = newPos;
         
         yield return new WaitForSeconds(timeBetweenMoves);

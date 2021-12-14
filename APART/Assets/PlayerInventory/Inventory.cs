@@ -1,0 +1,127 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class Inventory : MonoBehaviour
+{
+    //Inventory Slots
+    public int currentEquipped;
+    public List<Image> inventorySlots;
+    public List<Image> inventoryItems;
+    public List<Slider> reloadSliders;
+    public Image selectedSlot;
+    public Image itemSlot1;
+    public SpriteRenderer armImage;
+
+    [SerializeField]
+    public int currentSlot;
+    public Sprite selectedSlotImage;
+    public Sprite defaultSlotImage;
+    public bool selected;
+
+    //Ammo
+    public int pistolAmmo;
+    public int tranqAmmo;
+
+    private void Awake()
+    {
+        int i = 0;
+        foreach (Image im in inventorySlots)
+        {
+            //Debug.Log(ItemDatabase.instance.GetItem(GetSlotItem(i)));
+            i++;
+        }
+    }
+
+    public void UpdatePlayerEquipped(int itemID, int slotNdx)
+    {
+        Item i;
+        currentEquipped = itemID;
+        i = ItemDatabase.instance.GetItem(itemID);
+        inventoryItems[slotNdx].sprite = Resources.Load<Sprite>("Items/" + i.name);
+        if(PlayerController.myPlayer.isCara)
+            armImage.sprite = Resources.Load<Sprite>("Arms/Cara/" + i.name);
+        else
+            armImage.sprite = Resources.Load<Sprite>("Arms/Alice/" + i.name);
+    }
+
+
+    public void ResetInventory()
+    {
+        foreach (Image iS in inventorySlots)
+        {
+            iS.sprite = defaultSlotImage;
+        }
+
+        foreach (Image iI in inventoryItems)
+        {
+            iI.sprite = Resources.Load<Sprite>("Items/EmptyHand");
+        }
+
+        UpdatePlayerEquipped(0, 0);
+        UpdatePlayerEquipped(0, 1);
+
+    }
+    public void UpdateSlotSelection(int index)
+    {
+
+        foreach (Image iS in inventorySlots)
+        {
+            iS.sprite = defaultSlotImage;
+        }
+
+        if (currentSlot == index && selected == true)
+        {
+
+            inventorySlots[currentSlot].sprite = defaultSlotImage;
+            selected = false;
+            currentSlot = index;
+            selectedSlot = inventorySlots[index];
+        }
+        else if (currentSlot == index && selected == false)
+        {
+            inventorySlots[currentSlot].sprite = selectedSlotImage;
+            selected = true;
+            currentSlot = index;
+            selectedSlot = inventorySlots[index];
+            UpdatePlayerEquipped(GetSlotItem(index), index);
+        }
+        else
+        {
+            inventorySlots[index].sprite = selectedSlotImage;
+            selected = true;
+            currentSlot = index;
+            selectedSlot = inventorySlots[index];
+            UpdatePlayerEquipped(GetSlotItem(index), index);
+        }
+    }
+
+    public int GetSlotItem(int index)
+    {
+        GameObject go;
+        Item i;
+        string goName;
+
+        if (index == 0)
+        {
+            go = GameObject.FindGameObjectWithTag("Slot1");
+            goName = go.GetComponent<Image>().sprite.name;
+            //Debug.Log(goName);
+            i = ItemDatabase.instance.GetItem(goName);
+            //Debug.Log(i.id);
+            return i.id;
+        }
+        else if (index == 1)
+        {
+            go = GameObject.FindGameObjectWithTag("Slot2");
+            goName = go.GetComponent<Image>().sprite.name;
+            //Debug.Log(goName);
+            i = ItemDatabase.instance.GetItem(goName);
+            //Debug.Log(i.id);
+            return i.id;
+        }
+
+        return 0;
+    }
+}

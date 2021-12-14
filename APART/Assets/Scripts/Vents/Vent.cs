@@ -5,8 +5,9 @@ using UnityEngine.UI;
 
 public class Vent : MonoBehaviour
 {
-    BoxCollider2D boxCollider;
-    CircleCollider2D sphereCollider;
+
+    [HideInInspector] public BoxCollider2D boxCollider;
+    [HideInInspector] public CircleCollider2D sphereCollider;
 
     VentCanvas ventCanvas;
 
@@ -19,7 +20,7 @@ public class Vent : MonoBehaviour
         boxCollider = GetComponent<BoxCollider2D>();
         boxCollider.enabled = false;
         sphereCollider = GetComponent<CircleCollider2D>();
-        ventCanvas = transform.root.GetComponent<VentCanvas>();
+        ventCanvas = transform.parent.GetComponent<VentCanvas>();
         exitPoint = transform.GetChild(0).transform;
     }
 

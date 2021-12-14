@@ -19,7 +19,7 @@ public class MiniMap : MonoBehaviour
         foreach(MapElement m in mapElements)
         {
             m.isFound = false;
-            m.unlockZone.enabled = true;
+            m.unlockZone.gameObject.SetActive(false);
         }
     }
 }

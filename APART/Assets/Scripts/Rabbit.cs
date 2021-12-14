@@ -31,6 +31,7 @@ public class Rabbit : MonoBehaviour
     {
         startPos = transform.position;
         rb = GetComponent<Rigidbody2D>();
+        target = FindObjectOfType<PlayerController>().gameObject;
         player = target.GetComponent<Player>();
         anim = GetComponent<Animator>();
     }
@@ -64,7 +65,8 @@ public class Rabbit : MonoBehaviour
             
         }
 
-        rb.AddForce(aimVector.Value.normalized * force, ForceMode2D.Impulse);
+        if(aimVector.HasValue)
+            rb.AddForce(aimVector.Value.normalized * force, ForceMode2D.Impulse);
 
         if(rb.velocity.x < 0)
         {
@@ -80,7 +82,7 @@ public class Rabbit : MonoBehaviour
     }
     void Update()
     {
-        if (!player.gameObject.GetComponent<PlayerController>().isCara)
+        if (!PlayerController.myPlayer.isCara)
         {
             if (!didLaunch && Mathf.Abs(transform.position.x - target.transform.position.x) < detectPlayerRadius)
             {

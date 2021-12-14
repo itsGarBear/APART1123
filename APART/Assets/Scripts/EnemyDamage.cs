@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GuardDamage : MonoBehaviour
+public class EnemyDamage : MonoBehaviour
 {
     public int attackDamage;
     private void OnTriggerEnter2D(Collider2D collision)
