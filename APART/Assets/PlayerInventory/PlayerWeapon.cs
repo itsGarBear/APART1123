@@ -56,11 +56,14 @@ public class PlayerWeapon : MonoBehaviour
     public bool isReloading = false;
     public float timer = 0f;
 
+    private EscapeManager eM;
+
     private void Awake()
     {
         UpdateAmmoText();
         pc = FindObjectOfType<PlayerController>();
         TryShoot();
+        eM = FindObjectOfType<EscapeManager>();
     }
 
     public void Update()
@@ -118,6 +121,11 @@ public class PlayerWeapon : MonoBehaviour
         }
 
         if ((playerInv.currentEquipped != 1 || playerInv.currentEquipped != 2) && !playerInv.selected)
+        {
+            return;
+        }
+
+        if (eM.isPaused)
         {
             return;
         }

@@ -17,7 +17,7 @@ public class SceneManager : MonoBehaviour
 
     public void Exit()
     {
-        //Application.Quit();
-        UnityEditor.EditorApplication.ExitPlaymode();
+        Application.Quit();
+        //UnityEditor.EditorApplication.ExitPlaymode();
     }
 }
