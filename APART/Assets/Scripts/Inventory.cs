@@ -28,6 +28,10 @@ public class Inventory : MonoBehaviour
     private Player player;
     private Transform dropTransform;
 
+    public bool hasLevel1 = false;
+    public bool hasLevel2 = false;
+    public bool hasLevel3 = false;
+
     private void Awake()
     {
         int i = 0;

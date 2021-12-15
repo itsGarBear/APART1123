@@ -6,13 +6,15 @@ using TMPro;
 public enum PickupTypes
 {
     Ammo,
-    Health
+    Health,
+    Card
 }
 
 public class RadiusDetector : MonoBehaviour
 {
     public float pickupRadius = 3f;
     private Player player;
+    private Inventory playerInv;
     public List<TextMeshProUGUI> pickupText;
     public int value;
     public PickupTypes type;
@@ -20,6 +22,7 @@ public class RadiusDetector : MonoBehaviour
     private void Awake()
     {
         player = FindObjectOfType<Player>();
+        playerInv = FindObjectOfType<Inventory>();
         foreach (TextMeshProUGUI text in pickupText)
         {
             text.enabled = false;
@@ -46,6 +49,22 @@ public class RadiusDetector : MonoBehaviour
                 if (type == PickupTypes.Health)
                 {
                     player.Heal(value);
+                }
+
+                if (type == PickupTypes.Card)
+                {
+                    if (this.name == "Level1")
+                    {
+                        playerInv.hasLevel1 = true;
+                    }
+                    else if (this.name == "Level2")
+                    {
+                        playerInv.hasLevel2 = true;
+                    }
+                    else
+                    {
+                        playerInv.hasLevel3 = true;
+                    }
                 }
                 Destroy(this.gameObject);
             }
